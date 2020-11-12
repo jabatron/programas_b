@@ -62,7 +62,7 @@ if __name__ == "__main__":
             #Contar lineas
             print (f'El fichero {f} tiene:')
             print_num (num, (contarlineas (f)))
-            print ("LINEAS\n\n")
+            print ("LINEAS".center(25, '-'))
         else:
             print (f'El fichero {f} no existe o ruta erronea.\n')
 
