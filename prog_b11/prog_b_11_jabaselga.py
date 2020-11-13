@@ -18,6 +18,7 @@ prog_b_11_jabaselga.py: error: the following arguments are required: path/filena
 
 import argparse
 from pathlib import Path
+from colorama import Fore, init
 
 num=[[' ###',' #',' ###',' ###',' # #',' ###',' ###',' ###',' ###',' ###'], 
      [' # #',' #','   #','   #',' # #',' #  ',' #  ','   #',' # #',' # #'], 
@@ -39,9 +40,9 @@ def file_exist (file):
     cf = Path(file)
     if cf.is_file ():
         # El fichero existe
-        return True
+        return cf.name
     else:
-        return False
+        return None
 
 def contarlineas (file):
     return len(open(file, 'rb').readlines(  ))
@@ -50,21 +51,31 @@ def contarlineas (file):
 if __name__ == "__main__":
 
     #Gestion de argumentos
-    parser = argparse.ArgumentParser (description='Count lines in a text file.')
+    parser = argparse.ArgumentParser (description='Count lines in a text file.', epilog='@jabaselga')
     parser.add_argument ('file', metavar='path/filename.ext', type=str, nargs='+', help='Files to count lines')
 
     args = parser.parse_args()
     files = (getattr(args, 'file'))
 
+    # colorama inicialización
+    init ()
+
+    print (f"{Fore.BLUE}________________________________________________________________________________")
+    print ('Ejercicio b11. Contador de lineas.')
+    print ('@jabaselga')
+    print (f"________________________________________________________________________________{Fore.RESET}")
+
     for f in files:
         #Existe filename
-        if file_exist (f):
+        nombre = file_exist (f) # me cojo solo el nombre del archivo.
+        if nombre:
             #Contar lineas
-            print (f'El fichero {f} tiene:')
+            print (f'El fichero {Fore.GREEN}{nombre}{Fore.RESET} tiene:')
             print_num (num, (contarlineas (f)))
-            print ("LINEAS".center(25, '-'))
+            print (f"{Fore.GREEN}LINEAS{Fore.RESET}".center(25, '-'))
         else:
-            print (f'El fichero {f} no existe o ruta erronea.\n')
+            print (f'El fichero {Fore.RED}{f}{Fore.RESET} no existe o ruta erronea.\n')
+        print ("")
 
 
     #Mostrar Resultado
