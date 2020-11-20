@@ -118,7 +118,7 @@ def bin6_to_ascii(la):
 
     return cad
 
-    
+
 def string_to_base64(cadena):
 
     binary = ascii_to_binary (cadena)
@@ -133,6 +133,11 @@ def base64_to_string(base64):
     cadena=bin6_to_ascii(bin6)
 
     return cadena
+
+
+def string_reverse(cadena):
+    return cadena[::-1]
+
 
 if __name__ == "__main__":
 
