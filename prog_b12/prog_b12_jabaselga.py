@@ -146,9 +146,13 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-e", "--encode", metavar="string", help="String to encode.")
     group.add_argument("-d", "--decode", metavar="string", help="String to decode.")
-    group.add_argument("-r", "--reverse", metavar="string", help="String to reverse")
+    group.add_argument("-r", "--reverse", metavar="string", help="String to reverse.")
     
     args = parser.parse_args()   
+
+    argsn = vars(parser.parse_args())
+    if not any(argsn.values()):
+        parser.error('No arguments provided.')
 
     if args.encode:
         base64 = string_to_base64(args.encode)
@@ -157,7 +161,7 @@ if __name__ == "__main__":
         cadena = base64_to_string(args.decode)
         print (cadena)
 
-    # extra: funcion reverse
+    # extra: programa alternativo
     if args.reverse:
         cr = string_reverse(args.reverse)
         print (cr)
