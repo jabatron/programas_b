@@ -174,6 +174,7 @@ if __name__ == "__main__":
     group.add_argument("-e", "--encode", metavar="string", help="String to encode.")
     group.add_argument("-d", "--decode", metavar="string", help="String to decode.")
     group.add_argument("-r", "--reverse", metavar="string", help="String to reverse.")
+    parser.add_argument("-v", "--verbose", help="Extra info", action="store_true")
     
     args = parser.parse_args()   
 
@@ -183,12 +184,18 @@ if __name__ == "__main__":
 
     if args.encode:
         base64 = string_to_base64(args.encode)
+        if args.verbose:
+            print("La cadenada codificada es:")
         print (base64)
     if args.decode:
         cadena = base64_to_string(args.decode)
+        if args.verbose:
+            print("La cadenada descodificada es:")
         print (cadena)
 
     # extra: programa alternativo
     if args.reverse:
+        if args.verbose:
+            print("La cadenada invertida es:")
         cr = string_reverse(args.reverse)
         print (cr)
