@@ -27,6 +27,8 @@ code: progb_12_tuuser.py
 
 import string
 import re
+import argparse
+
 
 # genero la cadena a usar para codificar
 chars64 = string.ascii_uppercase+string.ascii_lowercase+string.digits+'+/'
@@ -140,12 +142,22 @@ def string_reverse(cadena):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser (description="Code/Decode base64 and reverse string", epilog="@jabaselga")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-e", "--encode", metavar="string", help="String to encode.")
+    group.add_argument("-d", "--decode", metavar="string", help="String to decode.")
+    group.add_argument("-r", "--reverse", metavar="string", help="String to reverse")
+    
+    args = parser.parse_args()   
 
-    # leer cadena
-    cadena = "1mara"
-  
-    base64 = string_to_base64(cadena)
-    print (base64)
-   
-    cadena = base64_to_string(base64)
-    print (cadena)
+    if args.encode:
+        base64 = string_to_base64(args.encode)
+        print (base64)
+    if args.decode:
+        cadena = base64_to_string(args.decode)
+        print (cadena)
+
+    # extra: funcion reverse
+    if args.reverse:
+        cr = string_reverse(args.reverse)
+        print (cr)
