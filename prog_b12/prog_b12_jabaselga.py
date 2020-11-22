@@ -188,7 +188,7 @@ if __name__ == "__main__":
 
     if args.verbose:
         print (f"{Fore.BLUE}________________________________________________________________________________")
-        print ('Ejercicio b12. Codificacin/Decodificación e inversión de cadenas lineas.')
+        print ('Ejercicio b12. Codificación/Decodificación e inversión de cadenas.')
         print ('@jabaselga')
         print (f"________________________________________________________________________________{Fore.RESET}")
 
