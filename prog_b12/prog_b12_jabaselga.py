@@ -28,6 +28,7 @@ v0.1 funciones básicas implementadas
 import string
 import re
 import argparse
+from colorama import Fore, init
 
 
 # genero la cadena a usar para codificar
@@ -178,24 +179,33 @@ if __name__ == "__main__":
     
     args = parser.parse_args()   
 
-    argsn = vars(parser.parse_args())
-    if not any(argsn.values()):
-        parser.error('No arguments provided.')
+    argsn = args.encode or args.decode or args.reverse
+    if not argsn:
+        parser.error('No arguments to ejecute provided.')
+
+    # colorama inicialización
+    init ()
+
+    if args.verbose:
+        print (f"{Fore.BLUE}________________________________________________________________________________")
+        print ('Ejercicio b12. Codificacin/Decodificación e inversión de cadenas lineas.')
+        print ('@jabaselga')
+        print (f"________________________________________________________________________________{Fore.RESET}")
 
     if args.encode:
         base64 = string_to_base64(args.encode)
         if args.verbose:
-            print("La cadenada codificada es:")
+            print(f"La cadena {Fore.GREEN}{args.encode}{Fore.RESET} codificada en base64 es:")
         print (base64)
     if args.decode:
         cadena = base64_to_string(args.decode)
         if args.verbose:
-            print("La cadenada descodificada es:")
+            print(f"La cadena {Fore.GREEN}{args.decode}{Fore.RESET} descodificada en ASCII es:")
         print (cadena)
 
     # extra: programa alternativo
     if args.reverse:
         if args.verbose:
-            print("La cadenada invertida es:")
+            print(f"La cadena {Fore.GREEN}{args.reverse}{Fore.RESET} invertida es:")
         cr = string_reverse(args.reverse)
         print (cr)
