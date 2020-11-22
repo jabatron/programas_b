@@ -21,7 +21,7 @@ code: progb_12_tuuser.py
 #criptografia
 
 
-
+v0.1 funciones básicas implementadas
 
 """
 
