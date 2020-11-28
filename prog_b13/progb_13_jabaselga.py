@@ -25,13 +25,20 @@ code: progb_13_jabaselga.py
 #herramientas_sistemas/escritorio
 
 
+LIBRERIAS ADICIONALES:
+
+pip3 install pstools
+
 """
 
 import datetime
 import argparse
 import glob
 import os
+import getpass
 import platform
+import shutil
+import psutil
 from colorama import Fore, init
 
 def alternativo():
@@ -42,7 +49,7 @@ def alternativo():
     findeaño = datetime.datetime(hoy.year, 12, 31)
     diferencia = findeaño - hoy
 
-    print (f"Quedan {diferencia.days} hasta final de año.")
+    print (f"Quedan {Fore.CYAN}{diferencia.days}{Fore.RESET} días hasta final de año.")
 
 def delete_files (patron):
     """
@@ -52,44 +59,71 @@ def delete_files (patron):
     for i in files:
         os.remove(i)
 
+def delete_cache ():
+    """
+        Borra ficheros según una extensión
+    """
+    path = "/home/"+getpass.getuser()+"/.cache2/**"
+    files = glob.glob(path, recursive=False)
+    
+    for i in files:
+        try:
+            shutil.rmtree(i)
+        except:
+            os.remove(i)
+
+def matar_proceso (proceso):
+
+    process = False
+    for proc in psutil.process_iter():
+        # check whether the process name matches
+        if proc.name() == proceso:
+            proc.kill()
+            process = True
+            
+    if process:
+        print ("Proceso matado")
+    else:
+        print ("Proceso no encontrado")
+
 def basic_info():
-    usuario = os.getlogin()
+    #   usuario = os.getlogin()
+    usuario = getpass.getuser()
     usistema = platform.uname()
     sistema = f"SO: {Fore.GREEN}{usistema[0]}{Fore.RESET}, version {Fore.YELLOW}{usistema[2]}{Fore.RESET} ({usistema[3]})"
     equipo = f"Nombre del equipo: {Fore.CYAN}{usistema[1]}{Fore.RESET}"
+    mem = psutil.virtual_memory()
+    memoria = round (mem.total/(1024*1024*1024), 2)
+    disco=psutil.disk_usage('/')
     print (f"Ha iniciado sesión con el usuario {Fore.GREEN}{usuario}{Fore.RESET}")
     print (sistema)
     print (equipo)
-
-def borrar_archivos_duplicados(ruta)
-    files=glob.glob(ruta)
-    duplicados = [item for item, count in collections.Counter(a).items() if count > 1]
-    for i in duplicados:
-        os.remove()
-
+    print (f"Hay {Fore.GREEN}{memoria} Gb{Fore.RESET} de RAM y el disco esta ocupado al {Fore.GREEN}{disco.percent}%{Fore.RESET}.")
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser (description="Help to mantaining syste,", epilog="@jabaselga")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-db", "--deletebak", help="Delete files *.bak.", action="store_true")
+    group.add_argument("-dc", "--deletecache", help="Delete files in cache.", action="store_true")
     group.add_argument("-bi", "--basicinfo", help="Basic Info System.", action="store_true")
+    group.add_argument("-kp", "--killprocess", help="Kill a process.")
     parser.add_argument("-v", "--verbose", help="Extra info", action="store_true")
     # incluyo el programa ALTERNATIVO - dias hasta fin de año.
     group.add_argument("-a", "--alternative", help="Days before New Years Eve.", action="store_true")
 
     args = parser.parse_args()   
 
-    # argsn = args.encode or args.decode or args.reverse
-    # if not argsn:
-    #    parser.error('No arguments to ejecute provided.')
+    
+    if not (args.deletebak or args.deletecache or args.basicinfo or args.killprocess):
+        parser.error('No arguments to ejecute provided.')
 
     # colorama inicialización
-    init ()
+    init () 
 
     if args.verbose:
         print (f"{Fore.BLUE}________________________________________________________________________________")
-        print ('Ejercicio b12. Codificación/Decodificación e inversión de cadenas.')
+        print ('Ejercicio b13. Mantenimiento del sistema.')
         print ('@jabaselga')
         print (f"________________________________________________________________________________{Fore.RESET}")
 
@@ -102,3 +136,9 @@ if __name__ == "__main__":
     
     if args.basicinfo:
         basic_info()
+
+    if args.deletecache:
+       delete_cache()
+
+    if args.killprocess:
+        matar_proceso(args.killprocess)
