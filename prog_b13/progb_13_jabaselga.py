@@ -47,31 +47,44 @@ def alternativo():
         Calcula los días hasta final de año
     """
     hoy = datetime.datetime.now()
-    findeaño = datetime.datetime(hoy.year+1, 1, 1)
+    # siguiente año - año nuevo
+    findeaño = datetime.datetime(hoy.year+1, 1, 1) 
+    # diferencia de días
     diferencia = findeaño - hoy
 
     print (f"Quedan {Fore.CYAN}{diferencia.days}{Fore.RESET} días para el comienzo del año {hoy.year+1}.")
 
-def delete_files (patron):
+def delete_files (path):
     """
         Borra ficheros según una extensión
     """
-    files=glob.glob(patron)
-    for i in files:
-        os.remove(i)
+    if (os.path.isdir (path)):
+        patron=path+"/*.bak"
+        files=glob.glob(patron)
+        for i in files:
+            os.remove(i)
+        print (f"Ficheros {Fore.CYAN}*.bak{Fore.RESET} borrados en {path}")
+    else:
+        print (f"El {Fore.RED}{path}{Fore.RESET} no existe o es erroneo.")
 
 def delete_cache ():
     """
         Borra ficheros según una extensión
     """
-    path = "/home/"+getpass.getuser()+"/.cache2/**"
-    files = glob.glob(path, recursive=False)
-    
-    for i in files:
-        try:
-            shutil.rmtree(i)
-        except:
-            os.remove(i)
+    # generar la ruta del fichero .cache del usuario actual
+    path = "/home/"+getpass.getuser()+"/.cache/"
+
+    if (os.path.isdir(path)):
+        path=path+"**"
+        files = glob.glob(path, recursive=False)
+        print ("Borrando archivos y directorios ...")
+        for i in files:
+            try:
+                shutil.rmtree(i)
+            except:
+                os.remove(i)
+    else:
+        print ("No hay carpeta .cache para este usuario")
 
 def matar_proceso (proceso):
 
@@ -105,7 +118,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser (description="Help to mantaining syste,", epilog="@jabaselga")
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-db", "--deletebak", help="Delete files *.bak.", action="store_true")
+    group.add_argument("-db", "--deletebak", metavar ="path", help="Delete files *.bak in path.")
     group.add_argument("-dc", "--deletecache", help="Delete files in cache.", action="store_true")
     group.add_argument("-bi", "--basicinfo", help="Basic Info System.", action="store_true")
     group.add_argument("-kp", "--killprocess", help="Kill a process.")
@@ -133,7 +146,7 @@ if __name__ == "__main__":
         alternativo()
 
     if args.deletebak:
-        delete_files("*.bak")
+        delete_files(args.deletebak)
     
     if args.basicinfo:
         basic_info()
