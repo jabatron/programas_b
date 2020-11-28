@@ -61,6 +61,13 @@ def basic_info():
     print (sistema)
     print (equipo)
 
+def borrar_archivos_duplicados(ruta)
+    files=glob.glob(ruta)
+    duplicados = [item for item, count in collections.Counter(a).items() if count > 1]
+    for i in duplicados:
+        os.remove()
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser (description="Help to mantaining syste,", epilog="@jabaselga")
