@@ -14,9 +14,9 @@ Requerimientos:
 1.Minimo 4 opciones diferentes (ya sea mediante un menú o argumentos)
 2.Mostrar una barra de estado mientras el proceso transcurre y/o mostrar en que parte del proceso esta... (ej: borrando archivos..., borrando carpetas)
 3.Mostrar con estetica
-4.Puedes elejir si esta herramienta funcionara para windows/linux o en ambos, si se ejecutase en un sistema que no es compatible lo expuesto entonces el programa debe decirte que solo se ejuta en x sistema
-
-
+4.Puedes elejir si esta herramienta funcionara para windows/linux o en ambos, 
+  si se ejecutase en un sistema que no es compatible lo expuesto entonces el programa 
+  debe decirte que solo se ejuta en x sistema
 
 Programa alternativo:
 Crea un programa que te imprima cuantos dias faltan para que termine el año desde el dia actual 
@@ -140,7 +140,10 @@ if __name__ == "__main__":
 
     # colorama inicialización
     init ()     
-
+    
+    if platform.system() != "Linux":
+        print ("Este programa solo funciona correctametne en Linux...")
+    
     if args.verbose:
         print (f"{Fore.BLUE}________________________________________________________________________________")
         print ('Ejercicio b13. Mantenimiento del sistema.')
