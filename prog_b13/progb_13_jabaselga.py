@@ -18,7 +18,8 @@ Requerimientos:
 
 
 Programa alternativo:
-Crea un programa que te imprima cuantos dias faltan para que termine el año desde el dia actual en que se ejecute el programa.
+Crea un programa que te imprima cuantos dias faltan para que termine el año desde el dia actual 
+en que se ejecute el programa.
 
 code: progb_13_jabaselga.py
 @aprenderpython
@@ -46,10 +47,10 @@ def alternativo():
         Calcula los días hasta final de año
     """
     hoy = datetime.datetime.now()
-    findeaño = datetime.datetime(hoy.year, 12, 31)
+    findeaño = datetime.datetime(hoy.year+1, 1, 1)
     diferencia = findeaño - hoy
 
-    print (f"Quedan {Fore.CYAN}{diferencia.days}{Fore.RESET} días hasta final de año.")
+    print (f"Quedan {Fore.CYAN}{diferencia.days}{Fore.RESET} días para el comienzo del año {hoy.year+1}.")
 
 def delete_files (patron):
     """
@@ -115,11 +116,11 @@ if __name__ == "__main__":
     args = parser.parse_args()   
 
     
-    if not (args.deletebak or args.deletecache or args.basicinfo or args.killprocess):
+    if not (args.deletebak or args.deletecache or args.basicinfo or args.killprocess or args.alternative):
         parser.error('No arguments to ejecute provided.')
 
     # colorama inicialización
-    init () 
+    init ()     
 
     if args.verbose:
         print (f"{Fore.BLUE}________________________________________________________________________________")
