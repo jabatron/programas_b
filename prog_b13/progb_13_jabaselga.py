@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """ 
 Proyectos y Programas PYTHON
 Detalles del programa semanal:
@@ -58,12 +59,14 @@ def delete_files (path):
     """
         Borra ficheros según una extensión
     """
+    n=0
     if (os.path.isdir (path)):
         patron=path+"/*.bak"
         files=glob.glob(patron)
         for i in files:
             os.remove(i)
-        print (f"Ficheros {Fore.CYAN}*.bak{Fore.RESET} borrados en {path}")
+            n+=1
+        print (f"{n} Ficheros {Fore.CYAN}*.bak{Fore.RESET} borrados en {path}")
     else:
         print (f"El {Fore.RED}{path}{Fore.RESET} no existe o es erroneo.")
 
@@ -87,17 +90,20 @@ def delete_cache ():
         print ("No hay carpeta .cache para este usuario")
 
 def matar_proceso (proceso):
-
+    """
+        Mata un proceso identificandolo por su nombre  
+    """
     process = False
     for proc in psutil.process_iter():
         # check whether the process name matches
         if proc.name() == proceso:
-            proc.kill()
             process = True
-            
-    if process:
-        print ("Proceso matado")
-    else:
+            try:
+                proc.kill()
+                print (f"Proceso {Fore.GREEN}{proceso}{Fore.RESET} matado.")
+            except:
+                print (f"No tienes privilegios para matar el proceso {Fore.RED}{proceso}{Fore.RESET}.")
+    if not process:
         print ("Proceso no encontrado")
 
 def basic_info():
@@ -123,7 +129,7 @@ if __name__ == "__main__":
     group.add_argument("-bi", "--basicinfo", help="Basic Info System.", action="store_true")
     group.add_argument("-kp", "--killprocess", help="Kill a process.")
     parser.add_argument("-v", "--verbose", help="Extra info", action="store_true")
-    # incluyo el programa ALTERNATIVO - dias hasta fin de año.
+    # incluyo el programa ALTERNATIVO - dias hasta año nuevo.
     group.add_argument("-a", "--alternative", help="Days before New Years Eve.", action="store_true")
 
     args = parser.parse_args()   
