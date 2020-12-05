@@ -101,13 +101,13 @@ if __name__ == "__main__":
     
     fuentes = ["acrobatic", "alligator", "cybermedium", "doh", "fancy1", "russian", "swan"]
 
-    print ("De las siguientes fuentes elije una:")
 
     if args.font:
         fuentes.append("random")
         f = fuentes[args.font]
-        print (f)
+        print (f"Fuente elegida: {f}")
     else:
+        print ("De las siguientes fuentes elije una:")
         for i, f in enumerate(fuentes):
             t = f"{i}.- {f} {art.text2art(f, font=f)}"
             print (t) 
