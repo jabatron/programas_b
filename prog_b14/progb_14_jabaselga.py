@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" 
+"""
 Detalles del programa semanal:
 
 Crea un programa que disponga de diferentes diseños para texto en ascii y 
@@ -20,6 +20,7 @@ code: progb_14_tuuser.py
 LIBRERIAS ADICIONALES 
 
 pip install art
+pip install keyboard (requiere root en linux)
 
 """
 
@@ -70,7 +71,7 @@ def bucle_infinito ():
     try:
         import keyboard
     except:
-        print ("La libreria 'keyboard' no esta instalada. Instalar con pip install keyboard")
+        print ("La libreria 'keyboard' no esta instalada. Instalar con 'pip install keyboard' (requiere root en linux)")
         sys.exit(1)
 
     print ("Bucle infinito, termina la pulsar 'z' ...")
@@ -86,10 +87,8 @@ if __name__ == "__main__":
     parser.add_argument ("-f", "--font", metavar="font", help="Seleciona de 0 a 7", type=check_font)
     parser.add_argument ("-t", "--text", help="Texto a formatear")
     parser.add_argument ("-i", "--infinite", help="Bucle infinito", action="store_true")
-   
-    
+       
     args = parser.parse_args()   
-
 
     init ()
     print (f"{Fore.BLUE}________________________________________________________________________________")
@@ -121,5 +120,3 @@ if __name__ == "__main__":
         t = solicitar_texto ()
 
     imprimir_texto_fuente (f, t)
-
-
