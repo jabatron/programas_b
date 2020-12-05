@@ -16,6 +16,7 @@ Crea un programa que ejecute un bucle infinito hasta que el usuario escriba "z"
 
 code: progb_14_tuuser.py
 
+INCLUYE LOS DOS PROGRAMAS, el semanal y el alternativo.
 
 LIBRERIAS ADICIONALES 
 
