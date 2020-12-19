@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """ 
 Detalles del programa semanal:
 Crea un programa que haga una busqueda en google y tome los 3 primeros resultados 
@@ -31,6 +32,7 @@ code: progb_15_tuuser.py
 """
 
 # Comprobamos que estan todos modulos instalados
+import sys
 try: 
     from requests import get
     from bs4 import BeautifulSoup
@@ -38,13 +40,16 @@ except Exception as e:
     print ("Module requests and bs4 are obligatory to instal")
     print (e)
     print ("Please install module: 'pip install <module>'")
+    sys.exit ()
 
-import argparse  
+import argparse
+import urllib.parse
+from colorama import Fore, init
 
 def comprobar_argumentos ():
     parser = argparse.ArgumentParser (description="Búsqueda en google", epilog="@jabaselga")
     parser.add_argument ("-t", "--texto", metavar="Texto busqueda", help="Texto para realizar la busqueda")
-    parser.add_argument ("-n", "--num", help="Numero de búsquedas", type=int, choices=range(1, 10))
+    parser.add_argument ("-n", "--num", help="Numero de búsquedas", type=int, choices=range(1, 10), default=3)
     parser.add_argument ("-v", "--verbose", help="Muestra mas detalle", type=int, choices=[1, 2, 3], default=2)
        
     args = parser.parse_args() 
@@ -52,24 +57,21 @@ def comprobar_argumentos ():
     return args 
 
 class Busqueda():
-    def __init__ (self, topic, args):
+    def __init__ (self, topic, num, verbose):
         self.__topic = topic
-        self.__num = args.num if args.num else 3
+        self.__num = num
         self.__error = None
         self.__www = []
         self.__descripcion = []
         self.__cabecera = []
-        self.__args = args
+        self.__verbose = verbose
     
     def buscar (self):
-        #URL = f"https://www.google.com/search?q={self.__topic}&num={self.__num}"
-        URL = f"https://www.google.com/search?q={self.__topic}&num=12"
-        #URL = f"https://www.google.com/search?sxsrf=ALeKk01J4OUE7bgKRN6xNGhYbXc_nbEOow%3A1608219017996&ei=iXnbX_CePJKcgQbr2q2YBA&q={self.__topic}&oq={self.__topic}&gs_lcp=CgZwc3ktYWIQAzIECAAQRzIECAAQRzIECAAQRzIECAAQRzIECAAQRzIECAAQRzIECAAQRzIECAAQR1AAWABgqtABaABwAngAgAEAiAEAkgEAmAEAqgEHZ3dzLXdpesgBCMABAQ&sclient=psy-ab&ved=0ahUKEwiwh6faqtXtAhUSTsAKHWttC0MQ4dUDCA0&uact=5&num=12"
+        self.__URL = f"https://www.google.com/search?q={self.__topic}&num=12"
         usr_agent = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
-        print (URL)
-
+        
         try:
-            self.__busqueda = get(URL, headers=usr_agent)
+            self.__busqueda = get(self.__URL, headers=usr_agent)
         except Exception as e:
             self.__error = e
         else:    
@@ -94,44 +96,46 @@ class Busqueda():
                 c= result.span.text
                 if link and title:
                     self.__cabecera.append (c)
-                    # print (c)
                     self.__www.append(link['href'])
-                    # print (link['href'])
                     d= result.find('span', attrs={'class': 'aCOpRe'}).text
                     self.__descripcion.append(d)
-                    # print (d)
-                # print("")
+
             
     def presentar (self):
+        init ()     # Inicializa colorama
         if not self.__error:
-            msg = f"Mostrando las {self.__num} primeras busquedas de {self.__topic}."
+            msg = f"Mostrando las {Fore.GREEN}{self.__num}{Fore.RESET} primeras busquedas de {Fore.GREEN}{self.__topic}{Fore.RESET}."
             print (msg)
-            print ("-" * len(msg))
-           # print (self.__busqueda.content)
+            print ("-" * (len(msg)-20))
+            if self.__verbose == 3:
+                print (self.__URL)
         for i in range(len (self.__www)):
-            if self.__args.verbose == 2 or self.__args.verbose == 3:
+            if self.__verbose == 2 or self.__verbose == 3:
                 print (self.__cabecera[i])
-            print (self.__www[i])
-            if self.__args.verbose == 3:
-                print (self.__descripcion[i])
+            print (f"{Fore.BLUE}{urllib.parse.unquote(self.__www[i])}{Fore.RESET}")
+            
+            
+            if self.__verbose == 3:
+                print (f"{Fore.YELLOW}{self.__descripcion[i]}{Fore.RESET}")
             print ("")
         print ("")
     # mostrar busqueda
 
 def main ():
     args = comprobar_argumentos()
+    if args.verbose == 3:
+        print (f"{Fore.BLUE}________________________________________________________________________________")
+        print ('Ejercicio b15. Busquedas en Google.')
+        print ('@jabaselga')
+        print (f"________________________________________________________________________________{Fore.RESET}")
     if args.texto:
         texto = args.texto
     else:
         texto = input ("Introduzca texto a buscar: ")
-    b = Busqueda(texto, args)
+    b = Busqueda(texto, args.num, args.verbose)
     b.buscar()
     b.extraer()
     b.presentar()
-
-
-
-
 
 if __name__ == "__main__":
     main ()
