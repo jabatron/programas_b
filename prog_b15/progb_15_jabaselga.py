@@ -60,11 +60,11 @@ class Busqueda():
     def __init__ (self, topic, num, verbose):
         self.__topic = topic
         self.__num = num
+        self.__verbose = verbose
         self.__error = None
         self.__www = []
         self.__descripcion = []
         self.__cabecera = []
-        self.__verbose = verbose
     
     def buscar (self):
         self.__URL = f"https://www.google.com/search?q={self.__topic}&num=12"
@@ -113,8 +113,6 @@ class Busqueda():
             if self.__verbose == 2 or self.__verbose == 3:
                 print (self.__cabecera[i])
             print (f"{Fore.BLUE}{urllib.parse.unquote(self.__www[i])}{Fore.RESET}")
-            
-            
             if self.__verbose == 3:
                 print (f"{Fore.YELLOW}{self.__descripcion[i]}{Fore.RESET}")
             print ("")
@@ -128,6 +126,7 @@ def main ():
         print ('Ejercicio b15. Busquedas en Google.')
         print ('@jabaselga')
         print (f"________________________________________________________________________________{Fore.RESET}")
+
     if args.texto:
         texto = args.texto
     else:
