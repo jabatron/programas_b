@@ -45,10 +45,27 @@ import argparse
 import urllib.parse
 from colorama import Fore, init
 
+def check_url (url):
+    m = re.search ('^https://(www\.)?github.com', url)
+    if m:
+        return url
+    else:
+        msg=f"{url}: No es una dirección de github -> 'https://github.com/usuario/..."
+        raise argparse.ArgumentTypeError(msg)
+
+def check_path (path):
+    r = os.path.isdir (ruta)
+    r_w = os.access (ruta, os.W_OK)
+    if r and r_w:
+        return r, r_w
+    else:
+        msg=f"{path}: No es una ruta valida donde guardar los datos"
+        raise argparse.ArgumentTypeError(msg)
+    
 def comprobar_argumentos ():
     parser = argparse.ArgumentParser (description="Búsqueda en google", epilog="@jabaselga")
-    parser.add_argument ("-t", "--texto", metavar="Texto busqueda", help="Texto para realizar la busqueda")
-    parser.add_argument ("-d", "--directorio", help="Numero de búsquedas")
+    parser.add_argument ("-u", "--url", metavar="http://github.com/usuario/...", help="URL del fichero en GitHub a descargare", type=check_url)
+    parser.add_argument ("-d", "--directorio", metavar="PATH", help="Ruta donde descarga el fichero")
     parser.add_argument ("-r", "--repo", help="Numero de búsquedas")
     parser.add_argument ("-v", "--verbose", help="Muestra mas detalle", type=int, choices=[1, 2, 3], default=2)
        
@@ -60,12 +77,11 @@ def comprobar_url (url):
     m = re.search ('^https://(www\.)?github.com', url)
     if not m:
         print ("No es una dirección de github -> 'https://github.com/usuario/...")
-        return None
+        sys.exit ()
     else:
         return url
 
 def check_ruta (ruta):
-    print (ruta)
     r = os.path.isdir (ruta)
     r_w = os.access (ruta, os.W_OK)
 
@@ -78,17 +94,15 @@ def github_raw (url):
 
 def github_download_file(rurl, ruta=None):
     r = get(rurl)
-    if ruta:
-        c_r, c_rw = check_ruta(ruta)
-
+   
     if r.status_code == 200:
         *_, filename = rurl.split ('/')
     
-        fichero = open (ruta+"\\"+filename, 'wb')
+        fichero = open (ruta+"/"+filename, 'wb')
         fichero.write(r.content)
         fichero.close ()
     else:
-        print ("URL erronea, compruebe USUARIO, FICHERO y RUTA")
+        print ("URL erronea, compruebe USUARIO, REPO y FICHERO")
         sys.exit ()
 
 def descargar_repo (url, ruta):
@@ -101,14 +115,17 @@ def descargar_repo (url, ruta):
         
         if "zip" in h:
             ruta_zip = f"https://github.com/{h}" 
-    print (ruta_zip)
-    *_, filename = ruta_zip.split ("/")
-
-    fullname = f"{ruta}/{filename}"
+            _, user, repo, *_ = h.split ("/")
     
-    r = get(new_url, stream=True)
-    with open(fullname, 'wb') as fd:
-        fd.write(r.content)
+    *_, filename = ruta_zip.split ("/")
+    
+    fullname = f"{ruta}/{user}_{repo}_{filename}"
+    
+    r = get(ruta_zip)
+    with open(fullname, "wb") as zip_file:
+        zip_file.write(r.content)
+ 
+     
 
 def main ():
     args = comprobar_argumentos()
@@ -120,19 +137,14 @@ def main ():
 
 
 # Comprobamos URL
-    if args.texto:
+    if args.url:
         url = args.url
     else:
         url = input ("Introduzca la URL del fichero a descargar: ")
         url = comprobar_url(url)
     
-    if url:
-        url_raw = github_raw (url)
-        print (url_raw)
-    else:
-        print ("URL erronoea")
-        sys.exit ()
-
+    url_raw = github_raw (url)
+    
 # Comprobamos DIRECTORIO
     if args.directorio:
         ruta = args.directorio
