@@ -24,8 +24,6 @@ code: progb_16_tuuser.py
 @aprenderpython
 #webscraping
 
-https://github.com/AprenderPython/programas_b/blob/master/prog_b12/prog_b12_Raul.py
-https://raw.githubusercontent.com/AprenderPython/programas_b/master/prog_b12/prog_b12_Raul.py
 """
 
 # Comprobamos que estan todos modulos instalados
