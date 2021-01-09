@@ -46,6 +46,8 @@ import urllib.parse
 from colorama import Fore, init
 
 def check_url (url):
+    """ Comprueba que la URL empieza con la github, sino directametne generamos una excepcion
+    """
     m = re.search ('^https://(www\.)?github.com', url)
     if m:
         return url
@@ -54,6 +56,9 @@ def check_url (url):
         raise argparse.ArgumentTypeError(msg)
 
 def check_path (path):
+    """ Comprueba que el path para guardar existe y hay permisos para escribir
+        sino generamos una excepcion
+    """
     r = os.path.isdir (path)
     r_w = os.access (path, os.W_OK)
     if r and r_w:
@@ -66,7 +71,7 @@ def comprobar_argumentos ():
     parser = argparse.ArgumentParser (description="Búsqueda en google", epilog="@jabaselga")
     parser.add_argument ("-u", "--url", metavar="http://github.com/usuario/...", help="URL del fichero en GitHub a descargare", type=check_url)
     parser.add_argument ("-d", "--directorio", metavar="PATH", help="Ruta donde descarga el fichero '.' para directorio actual", type=check_path)
-    parser.add_argument ("-r", "--repo", help="Numero de búsquedas", action="store_true")
+    parser.add_argument ("-r", "--repo", help="Descarga todo el repositorio en un ZIP", action="store_true")
     parser.add_argument ("-v", "--verbose", help="Muestra mas detalle", action="store_true")
        
     args = parser.parse_args() 
@@ -74,6 +79,8 @@ def comprobar_argumentos ():
     return args 
 
 def comprobar_url (url, args):
+    """ Comprueba la URL si la introducimos manualmente, sino esta bien formada finalizamos el programa
+    """
     m = re.search ('^https://(www\.)?github.com', url)
     if not m:
         print ("No es una dirección de github -> 'https://github.com/usuario/...")
@@ -84,6 +91,9 @@ def comprobar_url (url, args):
         return url
 
 def check_ruta (ruta, args):
+    """ Comprobar ruta y permisos
+        Sino son validos finaliza la ejecución
+    """
     r = os.path.isdir (ruta)
     r_w = os.access (ruta, os.W_OK)
 
@@ -92,6 +102,8 @@ def check_ruta (ruta, args):
     return r, r_w
 
 def github_raw (url, args):
+    """ Partiendo de la URL inicial genera la URL donde esta el fichero
+    """
     rurl=url.replace("github.com","raw.githubusercontent.com")
     rurl=rurl.replace ("blob/","")
     if args.verbose:
@@ -99,6 +111,8 @@ def github_raw (url, args):
     return rurl
 
 def github_download_file(rurl, args, ruta=None):
+    """ Descarga el fichero y lo guarda
+    """
     r = get(rurl)
    
     if r.status_code == 200:
@@ -114,7 +128,8 @@ def github_download_file(rurl, args, ruta=None):
         sys.exit ()
 
 def descargar_repo (url, args, ruta):
-    
+    """ Busca el ZIP del repositorio, y lo descarga
+    """
     if args.verbose:
         print ("Descargando repositiorio completo ...")
     new_url, _= url.split("blob")
